@@ -2,9 +2,13 @@
 
 A Ruby implementation of anomaly detection algorithm.
 
+# To Do
 
-References:
+* Vectorize some of the operations
+* Tests!
 
-[Wikipedia] [id] explanation
+# References:
+
+[Wikipedia explanation] [id]
 
 [id]: https://en.wikipedia.org/wiki/Anomaly_detection
