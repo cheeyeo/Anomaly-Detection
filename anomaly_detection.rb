@@ -3,6 +3,8 @@ require "pry"
 require "securerandom"
 
 class AnomalyDetection
+  SQRT2PI = Math.sqrt(2 * Math::PI)
+  
   attr_reader :eps, :best_f1
 
   def initialize(examples, opts={})
@@ -39,14 +41,12 @@ class AnomalyDetection
     best_epsilon = 0.0
     best_f1 = 0.0
     f1 = 0.0
-
     max = pval.max.to_f
     min = pval.min.to_f
     stepsize = (max-min)/1000.0
     stepsize = 0.001 if stepsize.zero?
     min.step(max, stepsize).each do |epss|
       f1 = compute_f1_score(examples, epss)
-
       if f1 > best_f1
         best_f1 = f1
         best_epsilon = epss
@@ -65,9 +65,9 @@ class AnomalyDetection
       pred = self.anomaly?(example[0..-2], eps)
       if (pred && act)
         tp += 1
-      elsif (pred && !act) # and !act
+      elsif (pred && !act)
         fp += 1
-      elsif (!pred && act) # and !pred
+      elsif (!pred && act)
         fn += 1
       end
     end
@@ -81,7 +81,6 @@ class AnomalyDetection
     score.nan? ? 0.0 : score
   end
 
-
   def probability(x)
     @n.times.map do |i|
       p = normal_pdf(x[i], @mean[i], @std[i])
@@ -92,8 +91,6 @@ class AnomalyDetection
   def anomaly?(x, eps = @eps)
     probability(x) < eps
   end
-
-  SQRT2PI = Math.sqrt(2 * Math::PI)
 
   def normal_pdf(x, mean = 0, std = 1)
     1 / (SQRT2PI * std) * Math.exp(-((x - mean)**2 / (2.0 * (std**2))))
